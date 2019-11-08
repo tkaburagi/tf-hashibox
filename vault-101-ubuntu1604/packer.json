@@ -1,0 +1,86 @@
+{
+  "variables": {
+    "name": "Vault 101 - Ubuntu 16.04 - 0.0.2",
+    "vault_version": "0.0.0",
+    "aws_keypair_name": "{{env `AWS_KEYPAIR_NAME` }}",
+    "aws_keypair_file": "{{env `AWS_KEYPAIR_FILE`}}"
+  },
+  "builders": [
+    {
+      "access_key": "",
+      "ssh_keypair_name": "{{user `aws_keypair_name`}}",
+      "ssh_private_key_file": "{{user `aws_keypair_file`}}",
+      "type": "amazon-ebs",
+      "ssh_pty": true,
+      "region": "us-east-1",
+      "instance_type": "m5.large",
+      "source_ami": "ami-0cfee17793b08a293",
+      "ssh_username": "ubuntu",
+      "ami_name": "{{user `name`}}",
+      "tags" : {
+        "vault-version" : "{{user `vault_version`}}"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "shared/base.sh",
+      "destination": "/tmp/base.sh"
+    },
+    {
+      "type": "file",
+      "source":   "shared/docker.sh",
+      "destination": "/tmp/docker.sh"
+    },
+    {
+      "type": "file",
+      "source": "workstation/user.sh",
+      "destination": "/tmp/user.sh"
+    },
+    {
+      "type": "file",
+      "source": "workstation/consul.sh",
+      "destination": "/tmp/consul.sh"
+    },
+    {
+      "type": "file",
+      "source": "workstation/vault.sh",
+      "destination": "/tmp/vault.sh"
+    },
+    {
+      "type": "file",
+      "source": "workstation/postgres.sh",
+      "destination": "/tmp/postgres.sh"
+    },
+    {
+      "type": "file",
+      "source": "workstation/terraform.sh",
+      "destination": "/tmp/terraform.sh"
+    },
+    {
+      "type": "file",
+      "source": "workstation/tools.sh",
+      "destination": "/tmp/tools.sh"
+    },
+    {
+      "type": "file",
+      "source": "workstation/nomad.sh",
+      "destination": "/tmp/nomad.sh"
+    },
+    {
+      "type": "file",
+      "source": "workstation/webterminal.sh",
+      "destination": "/tmp/webterminal.sh"
+    },
+    {
+      "type": "file",
+      "source": "shared/cleanup.sh",
+      "destination": "/tmp/cleanup.sh"
+    },
+    {
+      "type": "shell",
+      "script": "all.sh"
+    }
+  ]
+}
