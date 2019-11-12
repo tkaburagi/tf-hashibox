@@ -1,5 +1,5 @@
 resource "aws_iam_user" "training" {
-  count = 3
+  count = var.workstations
 
   name = "${var.namespace}-${element(var.animals, count.index)}"
   path = "/${var.namespace}/"
